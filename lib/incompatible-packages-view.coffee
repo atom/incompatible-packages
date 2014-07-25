@@ -40,8 +40,9 @@ class IncompatiblePackagesView extends ScrollView
       setImmediate => @populateViews()
 
   populateViews: ->
-    for pack in atom.packages.getLoadedPackages() when not pack.isCompatible()
-      @append(new IncompatiblePackageView(pack))
+    for pack in atom.packages.getLoadedPackages()
+      if typeof pack.isCompatible is 'function' and not pack.isCompatible()
+        @append(new IncompatiblePackageView(pack))
 
   serialize: ->
     deserializer: @constructor.name
