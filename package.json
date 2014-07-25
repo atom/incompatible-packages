@@ -1,0 +1,14 @@
+{
+  "name": "incompatible-packages",
+  "main": "./lib/main",
+  "version": "0.0.0",
+  "description": "Show incompatible packages",
+  "repository": "https://github.com/atom/incompatible-packages",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "underscore-plus": "^1.5.1"
+  }
+}
