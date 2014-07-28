@@ -8,10 +8,12 @@ class IncompatiblePackageView extends View
       @div class: "panel-heading", =>
         @span outlet: 'name'
         @span outlet: 'version'
+        @span outlet: 'disabledLabel', class: 'text-info disabled-package', 'Disabled'
         @div class: 'btn-toolbar pull-right', =>
           @div class: 'btn-group', =>
             @button class: 'btn', outlet: 'updateButton', 'Check for Update'
             @button class: 'btn', outlet: 'issueButton', 'Report Issue'
+            @button class: 'btn', outlet: 'disableButton', 'Disable Package'
       @div class: "panel-body", =>
         @p "Listed below are the incompatible native modules in this package"
         @ul class: 'list-tree', outlet: 'modules'
@@ -24,6 +26,12 @@ class IncompatiblePackageView extends View
     @issueButton.on 'click', =>
       if repoUrl = @getRepositoryUrl()
         require('shell').openExternal("#{repoUrl}/issues")
+      false
+
+    @disabledLabel.hide()
+    @disableButton.on 'click', =>
+      atom.packages.disablePackage(@pack.name)
+      @disabledLabel.show()
       false
 
     @name.text(_.undasherize(_.uncamelcase(@pack.name)))
