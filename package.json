@@ -1,7 +1,7 @@
 {
   "name": "incompatible-packages",
   "main": "./lib/main",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Show incompatible packages",
   "repository": "https://github.com/atom/incompatible-packages",
   "license": "MIT",
