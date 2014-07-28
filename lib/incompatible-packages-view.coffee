@@ -33,13 +33,13 @@ class IncompatiblePackagesView extends ScrollView
         """
 
         @p """
-          Previous Atom versions shipped with Chrome 32 and node 0.11.10 but
-          Atom now ships with Chrome 35 and node 0.11.13.
+          Previous Atom versions shipped with Chrome 32 and Node 0.11.10 but
+          Atom now ships with Chrome 35 and Node 0.11.13.
         """
 
         @p """
           The packages listed should now ship versions of these native modules
-          that are compatible with node 0.11.13.
+          that are compatible with Node 0.11.13.
         """
 
         @p """
@@ -50,7 +50,7 @@ class IncompatiblePackagesView extends ScrollView
         @p """
           If no update is available you may want to notify the package author
           that their package isn't supported in Atom #{atom.getVersion()}
-          because of the Chrome 35 and node 0.11.13 upgrade.
+          because of the Chrome 35 and Node 0.11.13 upgrade.
         """
     else
       @description.text 'All of your packages installed to ~/.atom.packages are compatible with this version of Atom.'
