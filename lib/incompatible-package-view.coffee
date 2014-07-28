@@ -4,8 +4,8 @@ _ = require 'underscore-plus'
 module.exports =
 class IncompatiblePackageView extends View
   @content: ->
-    @div class: "inset-panel", =>
-      @div class: "panel-heading", =>
+    @div class: 'inset-panel', =>
+      @div class: 'panel-heading', =>
         @span outlet: 'name'
         @span outlet: 'version'
         @span outlet: 'disabledLabel', class: 'text-info disabled-package', 'Disabled'
@@ -14,8 +14,8 @@ class IncompatiblePackageView extends View
             @button class: 'btn', outlet: 'updateButton', 'Check for Update'
             @button class: 'btn', outlet: 'issueButton', 'Report Issue'
             @button class: 'btn', outlet: 'disableButton', 'Disable Package'
-      @div class: "panel-body", =>
-        @p "Listed below are the incompatible native modules in this package"
+      @div class: 'panel-body', =>
+        @p 'Listed below are the incompatible native modules in this package'
         @ul class: 'list-tree', outlet: 'modules'
 
   initialize: (@pack) ->
