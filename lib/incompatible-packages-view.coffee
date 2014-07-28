@@ -38,8 +38,8 @@ class IncompatiblePackagesView extends ScrollView
         """
 
         @p """
-          These packages should now ship versions of these native modules that
-          are compatible with node 0.11.13.
+          The packages listed should now ship versions of these native modules
+          that are compatible with node 0.11.13.
         """
 
         @p """
