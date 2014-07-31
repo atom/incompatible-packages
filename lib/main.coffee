@@ -18,6 +18,11 @@ module.exports =
 
     atom.workspaceView.command 'incompatible-packages:view', -> atom.workspaceView.open(viewUri)
 
+    atom.workspaceView.command 'incompatible-packages:clear-cache', ->
+      for key, data of global.localStorage
+        if key.indexOf('installed-packages:') is 0
+          global.localStorage.removeItem(key)
+
     atom.packages.once 'activated', ->
       if atom.workspaceView?.statusBar?
         incompatibleCount = 0
