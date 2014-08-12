@@ -33,7 +33,7 @@ class IncompatiblePackagesView extends ScrollView
         """
 
         @p """
-          Previous Atom versions shipped with Chrome 32 and Node 0.11.10 but
+          Previous Atom versions shipped with Chrome 31 and Node 0.11.10 but
           Atom now ships with Chrome 36 and Node 0.11.13.
         """
 
