@@ -7,6 +7,12 @@ class IncompatiblePackagesView extends ScrollView
     @div class: 'tool-panel panel-bottom padded incompatible-packages native-key-bindings', tabindex: -1, =>
       @div class: 'padded', =>
         @div outlet: 'description'
+        @div outlet: 'reloadArea', =>
+          @p """
+            If you think a package is listed here and should no longer be, click
+            the button below to reload Atom and recheck all packages.
+          """
+          @button outlet: 'reloadButton', class: 'btn', 'Reload Atom And Recheck Packages'
 
   initialize: ({@uri}) ->
     if atom.packages.getActivePackages().length > 0
@@ -14,6 +20,11 @@ class IncompatiblePackagesView extends ScrollView
     else
       # Render on next tick so packages have been activated
       setImmediate => @populateViews()
+
+    @reloadArea.hide()
+    @reloadButton.on 'click', =>
+      atom.workspaceView.trigger 'incompatible-packages:clear-cache'
+      atom.workspaceView.trigger 'window:reload'
 
   populateViews: ->
     incompatiblePackageCount = 0
@@ -26,6 +37,7 @@ class IncompatiblePackagesView extends ScrollView
 
   addDescription: (incompatiblePackageCount) ->
     if incompatiblePackageCount > 0
+      @reloadArea.show()
       @description.append $$ ->
         @p """
           The following packages could not be loaded because they contain native
