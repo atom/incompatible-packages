@@ -23,8 +23,7 @@ class IncompatiblePackagesView extends ScrollView
 
     @reloadArea.hide()
     @reloadButton.on 'click', =>
-      atom.workspaceView.trigger 'incompatible-packages:clear-cache'
-      atom.workspaceView.trigger 'window:reload'
+      atom.workspaceView.trigger 'incompatible-packages:reload-atom-and-recheck-packages'
 
   populateViews: ->
     incompatiblePackageCount = 0

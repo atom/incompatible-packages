@@ -23,6 +23,10 @@ module.exports =
         if key.indexOf('installed-packages:') is 0
           global.localStorage.removeItem(key)
 
+    atom.workspaceView.command 'incompatible-packages:reload-atom-and-recheck-packages', ->
+      atom.workspaceView.trigger 'incompatible-packages:clear-cache'
+      atom.workspaceView.trigger 'window:reload'
+
     atom.packages.once 'activated', ->
       if atom.workspaceView?.statusBar?
         incompatibleCount = 0
