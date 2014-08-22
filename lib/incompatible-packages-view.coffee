@@ -15,13 +15,14 @@ class IncompatiblePackagesView extends ScrollView
           @button outlet: 'reloadButton', class: 'btn', 'Reload Atom And Recheck Packages'
 
   initialize: ({@uri}) ->
+    @reloadArea.hide()
+
     if atom.packages.getActivePackages().length > 0
       @populateViews()
     else
       # Render on next tick so packages have been activated
       setImmediate => @populateViews()
 
-    @reloadArea.hide()
     @reloadButton.on 'click', =>
       atom.workspaceView.trigger 'incompatible-packages:reload-atom-and-recheck-packages'
 
