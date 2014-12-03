@@ -19,8 +19,8 @@ class IncompatiblePackageView extends View
         @ul class: 'list-tree', outlet: 'modules'
 
   initialize: (@pack) ->
-    @updateButton.on 'click', =>
-      atom.workspaceView.trigger 'settings-view:install-packages'
+    @updateButton.on 'click', ->
+      atom.commands.dispatch(atom.views.getView(atom.workspace), 'settings-view:install-packages')
       false
 
     @issueButton.on 'click', =>
