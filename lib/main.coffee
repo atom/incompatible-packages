@@ -16,16 +16,19 @@ module.exports =
     atom.workspace.addOpener (filePath) ->
       createView(uri: viewUri) if filePath is viewUri
 
-    atom.workspaceView.command 'incompatible-packages:view', -> atom.workspaceView.open(viewUri)
+    atom.commands.add 'atom-workspace',
+      'incompatible-packages:view': ->
+        atom.workspace.open(viewUri)
 
-    atom.workspaceView.command 'incompatible-packages:clear-cache', ->
-      for key, data of global.localStorage
-        if key.indexOf('installed-packages:') is 0
-          global.localStorage.removeItem(key)
+      'incompatible-packages:clear-cache': ->
+        for key, data of global.localStorage
+          if key.indexOf('installed-packages:') is 0
+            global.localStorage.removeItem(key)
 
-    atom.workspaceView.command 'incompatible-packages:reload-atom-and-recheck-packages', ->
-      atom.workspaceView.trigger 'incompatible-packages:clear-cache'
-      atom.workspaceView.trigger 'window:reload'
+      'incompatible-packages:reload-atom-and-recheck-packages': ->
+        workspaceView = atom.views.getView(atom.workspace)
+        workspaceView.trigger 'incompatible-packages:clear-cache'
+        workspaceView.trigger 'window:reload'
 
     atom.packages.once 'activated', ->
       if atom.workspaceView?.statusBar?
