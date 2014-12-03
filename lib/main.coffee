@@ -30,7 +30,7 @@ module.exports =
         workspaceView.trigger 'incompatible-packages:clear-cache'
         workspaceView.trigger 'window:reload'
 
-    atom.packages.once 'activated', ->
+    atom.packages.onDidActivateAll ->
       if atom.workspaceView?.statusBar?
         incompatibleCount = 0
         for pack in atom.packages.getLoadedPackages()
