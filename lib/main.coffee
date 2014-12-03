@@ -13,7 +13,7 @@ incompatiblePackagesStatusView = null
 
 module.exports =
   activate: ->
-    atom.workspace.registerOpener (filePath) ->
+    atom.workspace.addOpener (filePath) ->
       createView(uri: viewUri) if filePath is viewUri
 
     atom.workspaceView.command 'incompatible-packages:view', -> atom.workspaceView.open(viewUri)
