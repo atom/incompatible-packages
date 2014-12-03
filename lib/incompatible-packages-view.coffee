@@ -1,4 +1,4 @@
-{$$, ScrollView} = require 'atom'
+{$$, ScrollView} = require 'atom-space-pen-views'
 IncompatiblePackageView = require './incompatible-package-view'
 
 module.exports =
