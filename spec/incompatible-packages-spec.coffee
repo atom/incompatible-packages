@@ -21,7 +21,7 @@ describe "incompatible packages view", ->
     waitsFor ->
       atom.workspace.getActivePaneItem()
 
-  describe "when the status bar entry is click", ->
+  describe "when the status bar entry is clicked", ->
     it "opens the pane item", ->
       expect(atom.workspace.getActivePaneItem()).toBeFalsy()
 
