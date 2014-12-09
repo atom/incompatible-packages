@@ -1,4 +1,4 @@
-{$$, ScrollView} = require 'atom'
+{$$, ScrollView} = require 'atom-space-pen-views'
 IncompatiblePackageView = require './incompatible-package-view'
 
 module.exports =
@@ -23,8 +23,8 @@ class IncompatiblePackagesView extends ScrollView
       # Render on next tick so packages have been activated
       setImmediate => @populateViews()
 
-    @reloadButton.on 'click', =>
-      atom.workspaceView.trigger 'incompatible-packages:reload-atom-and-recheck-packages'
+    @reloadButton.on 'click', ->
+      atom.commands.dispatch(atom.views.getView(atom.workspace), 'incompatible-packages:reload-atom-and-recheck-packages')
 
   populateViews: ->
     incompatiblePackageCount = 0

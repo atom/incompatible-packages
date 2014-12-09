@@ -10,32 +10,50 @@ atom.deserializers.add
   deserialize: (state) -> createView(state)
 
 incompatiblePackagesStatusView = null
+openerSubscription = null
+workspaceSubscription = null
 
 module.exports =
   activate: ->
-    atom.workspace.registerOpener (filePath) ->
+    openerSubscription = atom.workspace.addOpener (filePath) ->
       createView(uri: viewUri) if filePath is viewUri
 
-    atom.workspaceView.command 'incompatible-packages:view', -> atom.workspaceView.open(viewUri)
+    workspaceSubscription = atom.commands.add 'atom-workspace',
+      'incompatible-packages:view': ->
+        atom.workspace.open(viewUri)
 
-    atom.workspaceView.command 'incompatible-packages:clear-cache', ->
-      for key, data of global.localStorage
-        if key.indexOf('installed-packages:') is 0
-          global.localStorage.removeItem(key)
+      'incompatible-packages:clear-cache': ->
+        for key, data of global.localStorage
+          if key.indexOf('installed-packages:') is 0
+            global.localStorage.removeItem(key)
 
-    atom.workspaceView.command 'incompatible-packages:reload-atom-and-recheck-packages', ->
-      atom.workspaceView.trigger 'incompatible-packages:clear-cache'
-      atom.workspaceView.trigger 'window:reload'
+      'incompatible-packages:reload-atom-and-recheck-packages': ->
+        workspaceView = atom.views.getView(atom.workspace)
+        workspaceView.trigger 'incompatible-packages:clear-cache'
+        workspaceView.trigger 'window:reload'
 
-    atom.packages.once 'activated', ->
-      if atom.workspaceView?.statusBar?
-        incompatibleCount = 0
-        for pack in atom.packages.getLoadedPackages()
-          incompatibleCount++ unless pack.isCompatible()
-
-        if incompatibleCount > 0
-          IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
-          incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(atom.workspaceView.statusBar, incompatibleCount)
+    if statusBar = document.querySelector('status-bar')
+      createStatusBarView(statusBar)
+    else
+      atom.packages.onDidActivateAll ->
+        statusBar = document.querySelector('status-bar')
+        createStatusBarView(statusBar) if statusBar?
 
   deactivate: ->
-    incompatiblePackagesStatusView?.remove()
+    incompatiblePackagesStatusView?.destroy()
+    incompatiblePackagesStatusView = null
+
+    openerSubscription?.dispose()
+    openerSubscription = null
+
+    workspaceSubscription?.dispose()
+    workspaceSubscription = null
+
+createStatusBarView = (statusBar) ->
+  incompatibleCount = 0
+  for pack in atom.packages.getLoadedPackages()
+    incompatibleCount++ unless pack.isCompatible()
+
+  if incompatibleCount > -1
+    IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
+    incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(statusBar, incompatibleCount)

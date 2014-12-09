@@ -1,4 +1,4 @@
-# Incompatible Packages package
+# Incompatible Packages package [![Build Status](https://travis-ci.org/atom/incompatible-packages.svg?branch=master)](https://travis-ci.org/atom/incompatible-packages)
 
 Displays a list of installed Atom packages that have native module
 dependencies that are not compatible with the current version of Atom.
