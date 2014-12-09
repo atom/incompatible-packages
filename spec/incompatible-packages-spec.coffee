@@ -1,17 +1,20 @@
+fs = require 'fs-plus'
 path = require 'path'
 {$} = require 'atom-space-pen-views'
 
 describe "incompatible packages view", ->
   beforeEach ->
     jasmine.attachToDOM(atom.views.getView(atom.workspace))
-    atom.packages.loadPackage(path.join(__dirname, 'fixtures', 'incompatible-package'))
+
+    packagePath = path.join(__dirname, 'fixtures', 'incompatible-package')
+    fs.writeFileSync(path.join(packagePath, 'node_modules', 'bad', 'build', 'Release', 'bad.node'), 'this is not a valid native module')
+    atom.packages.loadPackage(packagePath)
 
     waitsForPromise ->
       atom.packages.activatePackage('status-bar')
 
     waitsForPromise ->
       atom.packages.activatePackage('incompatible-packages')
-
 
   it "opens a pane item when incompatible-packages:view is dispatched", ->
     expect(atom.workspace.getActivePaneItem()).toBeFalsy()
