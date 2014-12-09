@@ -29,3 +29,6 @@ describe "incompatible packages view", ->
 
       waitsFor ->
         atom.workspace.getActivePaneItem()
+
+      runs ->
+        expect($('.incompatible-packages-status').length).toBe 0

@@ -15,5 +15,8 @@ class IncompatiblePackagesStatusView extends View
 
     @on 'click', =>
       atom.commands.dispatch(atom.views.getView(atom.workspace), 'incompatible-packages:view')
-      @tooltipSubscription.dispose()
-      @remove()
+      @destroy()
+
+  destroy: ->
+    @tooltipSubscription.dispose()
+    @remove()

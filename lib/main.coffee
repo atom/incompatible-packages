@@ -40,7 +40,7 @@ module.exports =
         createStatusBarView(statusBar) if statusBar?
 
   deactivate: ->
-    incompatiblePackagesStatusView?.remove()
+    incompatiblePackagesStatusView?.destroy()
     incompatiblePackagesStatusView = null
 
     openerSubscription?.dispose()
