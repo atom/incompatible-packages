@@ -1,5 +1,5 @@
 _ = require 'underscore-plus'
-{$, View} = require 'atom-space-pen-views'
+{View} = require 'atom-space-pen-views'
 
 module.exports =
 class IncompatiblePackagesStatusView extends View
