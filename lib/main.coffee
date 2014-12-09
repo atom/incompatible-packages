@@ -54,6 +54,6 @@ createStatusBarView = (statusBar) ->
   for pack in atom.packages.getLoadedPackages()
     incompatibleCount++ unless pack.isCompatible()
 
-  if incompatibleCount > -1
+  if incompatibleCount > 0
     IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
     incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(statusBar, incompatibleCount)
