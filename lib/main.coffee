@@ -29,8 +29,8 @@ module.exports =
 
       'incompatible-packages:reload-atom-and-recheck-packages': ->
         workspaceView = atom.views.getView(atom.workspace)
-        workspaceView.trigger 'incompatible-packages:clear-cache'
-        workspaceView.trigger 'window:reload'
+        atom.commands.dispatch(workspaceView, 'incompatible-packages:clear-cache')
+        atom.commands.dispatch(workspaceView, 'window:reload')
 
     if statusBar = document.querySelector('status-bar')
       createStatusBarView(statusBar)
