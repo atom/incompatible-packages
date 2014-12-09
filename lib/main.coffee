@@ -31,14 +31,16 @@ module.exports =
         workspaceView.trigger 'window:reload'
 
     atom.packages.onDidActivateAll ->
-      if atom.workspaceView?.statusBar?
-        incompatibleCount = 0
-        for pack in atom.packages.getLoadedPackages()
-          incompatibleCount++ unless pack.isCompatible()
+      statusBar = document.querySelector('status-bar')
+      return unless statusBar?
 
-        if incompatibleCount > 0
-          IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
-          incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(atom.workspaceView.statusBar, incompatibleCount)
+      incompatibleCount = 0
+      for pack in atom.packages.getLoadedPackages()
+        incompatibleCount++ unless pack.isCompatible()
+
+      if incompatibleCount > 0
+        IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
+        incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(atom.workspaceView.statusBar, incompatibleCount)
 
   deactivate: ->
     incompatiblePackagesStatusView?.remove()
