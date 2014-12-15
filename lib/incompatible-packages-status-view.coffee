@@ -11,7 +11,7 @@ class IncompatiblePackagesStatusView extends View
   initialize: (statusBar, incompatibleCount) ->
     @countLabel.text(incompatibleCount)
     @tooltipSubscription = atom.tooltips.add(@element, title: _.pluralize(incompatibleCount, 'incompatible package'))
-    statusBar.appendRight(this)
+    statusBar.addRightTile(item: this)
 
     @on 'click', =>
       atom.commands.dispatch(atom.views.getView(atom.workspace), 'incompatible-packages:view')
