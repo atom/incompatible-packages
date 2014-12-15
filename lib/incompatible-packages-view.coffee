@@ -1,4 +1,5 @@
 {$$, ScrollView} = require 'atom-space-pen-views'
+{Disposable} = require 'atom'
 IncompatiblePackageView = require './incompatible-package-view'
 
 module.exports =
@@ -25,6 +26,10 @@ class IncompatiblePackagesView extends ScrollView
 
     @reloadButton.on 'click', ->
       atom.commands.dispatch(atom.views.getView(atom.workspace), 'incompatible-packages:reload-atom-and-recheck-packages')
+
+  #TODO Remove both of these post 1.0
+  onDidChangeTitle: -> new Disposable()
+  onDidChangeModified: -> new Disposable()
 
   populateViews: ->
     incompatiblePackageCount = 0
