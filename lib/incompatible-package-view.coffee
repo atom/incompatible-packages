@@ -14,7 +14,7 @@ class IncompatiblePackageView extends View
             @button class: 'btn', outlet: 'updateButton', 'Check for Update'
             @button class: 'btn', outlet: 'issueButton', 'Report Issue'
             @button class: 'btn', outlet: 'disableButton', 'Disable Package'
-      @div class: 'panel-body', =>
+      @div class: 'panel-body padded', =>
         @p 'Listed below are the incompatible native modules that this package depends on.'
         @ul class: 'list-tree', outlet: 'modules'
 
