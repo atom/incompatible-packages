@@ -35,7 +35,7 @@ module.exports =
     if statusBar = document.querySelector('status-bar')
       createStatusBarView(statusBar)
     else
-      atom.packages.onDidActivateAll ->
+      atom.packages.onDidActivateInitialPackages ->
         statusBar = document.querySelector('status-bar')
         createStatusBarView(statusBar) if statusBar?
 
