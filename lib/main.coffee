@@ -32,13 +32,6 @@ module.exports =
         atom.commands.dispatch(workspaceView, 'incompatible-packages:clear-cache')
         atom.commands.dispatch(workspaceView, 'window:reload')
 
-    if statusBar = document.querySelector('status-bar')
-      createStatusBarView(statusBar)
-    else
-      atom.packages.onDidActivateInitialPackages ->
-        statusBar = document.querySelector('status-bar')
-        createStatusBarView(statusBar) if statusBar?
-
   deactivate: ->
     incompatiblePackagesStatusView?.destroy()
     incompatiblePackagesStatusView = null
@@ -49,11 +42,11 @@ module.exports =
     workspaceSubscription?.dispose()
     workspaceSubscription = null
 
-createStatusBarView = (statusBar) ->
-  incompatibleCount = 0
-  for pack in atom.packages.getLoadedPackages()
-    incompatibleCount++ unless pack.isCompatible()
+  consumeStatusBar: (statusBar) ->
+    incompatibleCount = 0
+    for pack in atom.packages.getLoadedPackages()
+      incompatibleCount++ unless pack.isCompatible()
 
-  if incompatibleCount > 0
-    IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
-    incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(statusBar, incompatibleCount)
+    if incompatibleCount > 0
+      IncompatiblePackagesStatusView = require './incompatible-packages-status-view'
+      incompatiblePackagesStatusView ?= new IncompatiblePackagesStatusView(statusBar, incompatibleCount)
