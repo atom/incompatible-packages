@@ -23,10 +23,16 @@ describe "incompatible packages view", ->
       atom.workspace.getActivePaneItem()
 
   describe "when the status bar entry is clicked", ->
+    statusBarItem = null
+
     it "opens the pane item", ->
       expect(atom.workspace.getActivePaneItem()).toBeFalsy()
 
-      $('.incompatible-packages-status').click()
+      waitsFor ->
+        statusBarItem = document.querySelector('.incompatible-packages-status')
+
+      runs ->
+        $(statusBarItem).click()
 
       waitsFor ->
         atom.workspace.getActivePaneItem()
