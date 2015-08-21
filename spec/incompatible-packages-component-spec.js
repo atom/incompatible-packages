@@ -128,9 +128,8 @@ describe('IncompatiblePackagesComponent', () => {
           expect(rebuildCalls.length).toBe(1)
           expect(rebuildCalls[0].packagePath).toBe('/Users/joe/.atom/packages/incompatible-1')
 
-          expect(element.querySelectorAll('.incompatible-package')[0].className).toMatch(/rebuilding/)
-          expect(element.querySelectorAll('.incompatible-package')[1].className).not.toMatch(/rebuilding/)
-
+          expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuilding')
+          expect(element.querySelector('.incompatible-package:nth-child(2) .badge')).toBeNull()
 
           rebuildCalls[0].callback({code: 0}) // simulate rebuild success
           await etch.getScheduler().getNextUpdatePromise() // view update
@@ -138,16 +137,14 @@ describe('IncompatiblePackagesComponent', () => {
           expect(rebuildCalls.length).toBe(2)
           expect(rebuildCalls[1].packagePath).toBe('/Users/joe/.atom/packages/incompatible-2')
 
-          expect(element.querySelectorAll('.incompatible-package')[0].className).not.toMatch(/rebuilding/)
-          expect(element.querySelectorAll('.incompatible-package')[0].className).toMatch(/rebuild-succeeded/)
-          expect(element.querySelectorAll('.incompatible-package')[1].className).toMatch(/rebuilding/)
+          expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuild Succeeded')
+          expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuilding')
 
           rebuildCalls[1].callback({code: 12, stderr: 'This is an error from the test!'}) // simulate rebuild failure
           await etch.getScheduler().getNextUpdatePromise() // view update
 
-          expect(element.querySelectorAll('.incompatible-package')[0].className).toMatch(/rebuild-succeeded/)
-          expect(element.querySelectorAll('.incompatible-package')[1].className).not.toMatch(/rebuilding/)
-          expect(element.querySelectorAll('.incompatible-package')[1].className).toMatch(/rebuild-failed/)
+          expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuild Succeeded')
+          expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuild Failed')
         })
       })
     })
