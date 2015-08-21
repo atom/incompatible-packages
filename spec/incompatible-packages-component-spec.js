@@ -145,6 +145,7 @@ describe('IncompatiblePackagesComponent', () => {
 
           expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuild Succeeded')
           expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuild Failed')
+          expect(element.querySelector('.incompatible-package:nth-child(2) pre').textContent).toBe('This is an error from the test!')
         })
       })
     })
