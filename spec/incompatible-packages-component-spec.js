@@ -4,13 +4,23 @@ import etch from 'etch'
 import IncompatiblePackagesComponent from '../lib/incompatible-packages-component'
 
 describe('IncompatiblePackagesComponent', () => {
-  let packages
+  let packages, etchScheduler
 
   beforeEach(() => {
+    etchScheduler = etch.getScheduler()
+
     packages = [
       {
         name: 'incompatible-1',
-        isCompatible: () => false,
+        isCompatible () {
+          return false
+        },
+        rebuild: function () {
+          return new Promise((resolve) => this.resolveRebuild = resolve)
+        },
+        getBuildFailureOutput () {
+          return null
+        },
         path: '/Users/joe/.atom/packages/incompatible-1',
         metadata: {
           repository: 'https://github.com/atom/incompatible-1',
@@ -19,11 +29,19 @@ describe('IncompatiblePackagesComponent', () => {
         incompatibleModules: [
           {name: 'x', version: '1.0.0', error: 'Expected version X, got Y'},
           {name: 'y', version: '1.0.0', error: 'Expected version X, got Z'}
-        ],
+        ]
       },
       {
         name: 'incompatible-2',
-        isCompatible: () => false,
+        isCompatible () {
+          return false
+        },
+        rebuild () {
+          return new Promise((resolve) => this.resolveRebuild = resolve)
+        },
+        getBuildFailureOutput () {
+          return null
+        },
         path: '/Users/joe/.atom/packages/incompatible-2',
         metadata: {
           repository: 'https://github.com/atom/incompatible-2',
@@ -31,17 +49,25 @@ describe('IncompatiblePackagesComponent', () => {
         },
         incompatibleModules: [
           {name: 'z', version: '1.0.0', error: 'Expected version X, got Y'}
-        ],
+        ]
       },
       {
         name: 'compatible',
-        isCompatible: () => true,
+        isCompatible () {
+          return true
+        },
+        rebuild () {
+          throw new Error('Should not rebuild a compatible package')
+        },
+        getBuildFailureOutput () {
+          return null
+        },
         path: '/Users/joe/.atom/packages/b',
         metadata: {
           repository: 'https://github.com/atom/b',
           version: '1.0.0'
         },
-        incompatibleModules: []
+        incompatibleModules: [],
       }
     ]
   })
@@ -58,8 +84,7 @@ describe('IncompatiblePackagesComponent', () => {
 
         expect(element.querySelectorAll('.incompatible-package').length).toEqual(0)
 
-        await new Promise(global.setImmediate)
-        await new Promise(global.requestAnimationFrame)
+        await etchScheduler.getNextUpdatePromise()
 
         expect(element.querySelectorAll('.incompatible-package').length).toBeGreaterThan(0)
       })
@@ -79,10 +104,31 @@ describe('IncompatiblePackagesComponent', () => {
           })
         let {element} = component
 
-        await new Promise(global.requestAnimationFrame)
+        await etchScheduler.getNextUpdatePromise()
 
         expect(element.querySelectorAll('.incompatible-package').length).toBe(0)
         expect(element.querySelector('button')).toBeNull()
+      })
+    })
+  })
+
+  describe('when some packages previously failed to rebuild', () => {
+    it('renders them with failed build status and error output', () => {
+      waitsForPromise(async () => {
+        packages[1].getBuildFailureOutput = function () {
+          return 'The build failed'
+        }
+
+        let component =
+          new IncompatiblePackagesComponent({
+            getActivePackages: () => packages,
+            getLoadedPackages: () => packages
+          })
+        let {element} = component
+
+        await etchScheduler.getNextUpdatePromise()
+        expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuild Failed')
+        expect(element.querySelector('.incompatible-package:nth-child(2) pre').textContent).toBe('The build failed')
       })
     })
   })
@@ -97,7 +143,7 @@ describe('IncompatiblePackagesComponent', () => {
           })
         let {element} = component
 
-        await new Promise(global.requestAnimationFrame)
+        await etchScheduler.getNextUpdatePromise()
 
         expect(element.querySelectorAll('.incompatible-package').length).toEqual(2)
         expect(element.querySelector('button')).not.toBeNull()
@@ -115,33 +161,26 @@ describe('IncompatiblePackagesComponent', () => {
           let {element} = component
           jasmine.attachToDOM(element)
 
-          await new Promise(global.requestAnimationFrame)
-
-          rebuildCalls = []
-          spyOn(component, 'runRebuildProcess').andCallFake((packagePath, callback) => {
-            rebuildCalls.push({packagePath, callback})
-          })
+          await etchScheduler.getNextUpdatePromise()
 
           component.rebuildIncompatiblePackages()
-          await etch.getScheduler().getNextUpdatePromise() // view update
+          await etchScheduler.getNextUpdatePromise() // view update
 
-          expect(rebuildCalls.length).toBe(1)
-          expect(rebuildCalls[0].packagePath).toBe('/Users/joe/.atom/packages/incompatible-1')
+          expect(packages[0].resolveRebuild).toBeDefined()
 
           expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuilding')
           expect(element.querySelector('.incompatible-package:nth-child(2) .badge')).toBeNull()
 
-          rebuildCalls[0].callback({code: 0}) // simulate rebuild success
-          await etch.getScheduler().getNextUpdatePromise() // view update
+          packages[0].resolveRebuild({code: 0}) // simulate rebuild success
+          await etchScheduler.getNextUpdatePromise() // view update
 
-          expect(rebuildCalls.length).toBe(2)
-          expect(rebuildCalls[1].packagePath).toBe('/Users/joe/.atom/packages/incompatible-2')
+          expect(packages[1].resolveRebuild).toBeDefined()
 
           expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuild Succeeded')
           expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuilding')
 
-          rebuildCalls[1].callback({code: 12, stderr: 'This is an error from the test!'}) // simulate rebuild failure
-          await etch.getScheduler().getNextUpdatePromise() // view update
+          packages[1].resolveRebuild({code: 12, stderr: 'This is an error from the test!'}) // simulate rebuild failure
+          await etchScheduler.getNextUpdatePromise() // view update
 
           expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuild Succeeded')
           expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuild Failed')
