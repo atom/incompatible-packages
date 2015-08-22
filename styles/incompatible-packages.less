@@ -4,11 +4,6 @@
   background-color: @pane-item-background-color;
   overflow-y: scroll;
 
-  .description {
-    font-size: 1.2em;
-    margin-bottom: 1em;
-  }
-
   .incompatible-package {
     padding: 15px;
     margin-bottom: 10px;
@@ -16,8 +11,6 @@
     border: 1px solid #d1d1d2;
     background-color: #fafafa;
     overflow: hidden;
-    cursor: pointer;
-    -webkit-user-select: none;
 
     .heading {
       margin-top: 0px;
@@ -33,6 +26,9 @@
 
     pre {
       margin-top: 2em;
+      max-height: 25em;
+      overflow: scroll;
+      color: @text-color-error;
     }
   }
 }
