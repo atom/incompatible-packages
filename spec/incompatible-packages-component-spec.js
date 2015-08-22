@@ -166,6 +166,8 @@ describe('IncompatiblePackagesComponent', () => {
           component.refs.rebuildButton.dispatchEvent(new CustomEvent('click', {bubbles: true}))
           await etchScheduler.getNextUpdatePromise() // view update
 
+          expect(component.refs.rebuildButton.disabled).toBe(true)
+
           expect(packages[0].resolveRebuild).toBeDefined()
 
           expect(element.querySelector('.incompatible-package:nth-child(1) .badge').textContent).toBe('Rebuilding')
