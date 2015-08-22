@@ -187,6 +187,33 @@ describe('IncompatiblePackagesComponent', () => {
           expect(element.querySelector('.incompatible-package:nth-child(2) pre').textContent).toBe('This is an error from the test!')
         })
       })
+
+      it('displays a prompt to reload Atom when the packages finish rebuilding', () => {
+        waitsForPromise(async () => {
+          let component =
+            new IncompatiblePackagesComponent({
+              getActivePackages: () => packages,
+              getLoadedPackages: () => packages
+            })
+          let {element} = component
+          jasmine.attachToDOM(element)
+          await etchScheduler.getNextUpdatePromise() // view update
+
+          component.refs.rebuildButton.dispatchEvent(new CustomEvent('click', {bubbles: true}))
+          expect(packages[0].resolveRebuild({code: 0}))
+          await new Promise(global.setImmediate)
+          expect(packages[1].resolveRebuild({code: 0}))
+
+          await etchScheduler.getNextUpdatePromise() // view update
+
+          expect(component.refs.reloadButton).toBeDefined()
+          expect(element.querySelector('.alert').textContent).toMatch(/2 of 2/)
+
+          spyOn(atom, 'reload')
+          component.refs.reloadButton.dispatchEvent(new CustomEvent('click', {bubbles: true}))
+          expect(atom.reload).toHaveBeenCalled()
+        })
+      })
     })
   })
 })
