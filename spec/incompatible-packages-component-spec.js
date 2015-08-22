@@ -163,7 +163,7 @@ describe('IncompatiblePackagesComponent', () => {
 
           await etchScheduler.getNextUpdatePromise()
 
-          component.rebuildIncompatiblePackages()
+          component.refs.rebuildButton.dispatchEvent(new CustomEvent('click', {bubbles: true}))
           await etchScheduler.getNextUpdatePromise() // view update
 
           expect(packages[0].resolveRebuild).toBeDefined()
