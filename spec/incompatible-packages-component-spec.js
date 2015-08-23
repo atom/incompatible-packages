@@ -113,7 +113,7 @@ describe('IncompatiblePackagesComponent', () => {
   })
 
   describe('when some packages previously failed to rebuild', () => {
-    it('renders them with failed build status and error output', () => {
+    it('renders them with failed build status, error output, and uninstall button', () => {
       waitsForPromise(async () => {
         packages[1].getBuildFailureOutput = function () {
           return 'The build failed'
@@ -127,8 +127,11 @@ describe('IncompatiblePackagesComponent', () => {
         let {element} = component
 
         await etchScheduler.getNextUpdatePromise()
-        expect(element.querySelector('.incompatible-package:nth-child(2) .badge').textContent).toBe('Rebuild Failed')
-        expect(element.querySelector('.incompatible-package:nth-child(2) pre').textContent).toBe('The build failed')
+        let packageElement = element.querySelector('.incompatible-package:nth-child(2)')
+
+        expect(packageElement.querySelector('.badge').textContent).toBe('Rebuild Failed')
+        expect(packageElement.querySelector('pre').textContent).toBe('The build failed')
+        expect(packageElement.querySelector('.btn-group > button:nth-child(1)').textContent).toBe('Uninstall')
       })
     })
   })
