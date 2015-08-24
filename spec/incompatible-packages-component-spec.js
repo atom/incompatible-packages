@@ -113,7 +113,7 @@ describe('IncompatiblePackagesComponent', () => {
   })
 
   describe('when some packages previously failed to rebuild', () => {
-    it('renders them with failed build status, error output, and uninstall button', () => {
+    it('renders them with failed build status and error output', () => {
       waitsForPromise(async () => {
         packages[1].getBuildFailureOutput = function () {
           return 'The build failed'
@@ -131,7 +131,6 @@ describe('IncompatiblePackagesComponent', () => {
 
         expect(packageElement.querySelector('.badge').textContent).toBe('Rebuild Failed')
         expect(packageElement.querySelector('pre').textContent).toBe('The build failed')
-        expect(packageElement.querySelector('.btn-group > button:nth-child(1)').textContent).toBe('Uninstall')
       })
     })
   })
@@ -153,7 +152,7 @@ describe('IncompatiblePackagesComponent', () => {
       })
     })
 
-    describe('when the rebuild button is clicked', () => {
+    describe('when the "Rebuild All" button is clicked', () => {
       it('rebuilds every incompatible package, updating each package\'s view with status', () => {
         waitsForPromise(async () => {
           let component =
@@ -217,6 +216,26 @@ describe('IncompatiblePackagesComponent', () => {
           spyOn(atom, 'reload')
           component.refs.reloadButton.dispatchEvent(new CustomEvent('click', {bubbles: true}))
           expect(atom.reload).toHaveBeenCalled()
+        })
+      })
+    })
+
+    describe('when the "Package Settings" button is clicked', () => {
+      it('opens the settings panel for the package', () => {
+        waitsForPromise(async () => {
+          let component =
+            new IncompatiblePackagesComponent({
+              getActivePackages: () => packages,
+              getLoadedPackages: () => packages
+            })
+          let {element} = component
+          jasmine.attachToDOM(element)
+
+          await etchScheduler.getNextUpdatePromise()
+
+          spyOn(atom.workspace, 'open')
+          element.querySelector('.incompatible-package:nth-child(2) button').dispatchEvent(new CustomEvent('click', {bubbles: true}))
+          expect(atom.workspace.open).toHaveBeenCalledWith('atom://config/packages/incompatible-2')
         })
       })
     })
