@@ -17,8 +17,5 @@
         "^1.0.0": "consumeStatusBar"
       }
     }
-  },
-  "deserializers": {
-    "IncompatiblePackagesComponent": "./lib/deserializer"
   }
 }
