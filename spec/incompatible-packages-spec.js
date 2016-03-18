@@ -4,6 +4,14 @@ import path from 'path'
 import IncompatiblePackagesComponent from '../lib/incompatible-packages-component'
 import StatusIconComponent from '../lib/status-icon-component'
 
+function findStatusBar () {
+  if (typeof atom.workspace.getFooterPanels === 'function') {
+    return atom.workspace.getFooterPanels()[0].getItem()
+  }
+
+  return atom.workspace.getBottomPanels()[0].getItem()
+}
+
 describe('Incompatible packages', () => {
   let statusBar
 
@@ -13,7 +21,7 @@ describe('Incompatible packages', () => {
     waitsForPromise(() => atom.packages.activatePackage('status-bar'))
 
     runs(() => {
-      statusBar = atom.workspace.getBottomPanels()[0].getItem()
+      statusBar = findStatusBar()
     })
   })
 
