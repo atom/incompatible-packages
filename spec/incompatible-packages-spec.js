@@ -35,7 +35,7 @@ describe('Incompatible packages', () => {
         path.join(__dirname, 'fixtures', 'incompatible-package')
       )
       spyOn(incompatiblePackage, 'isCompatible').andReturn(false)
-
+      incompatiblePackage.incompatibleModules = []
       waitsForPromise(() => atom.packages.activatePackage("incompatible-packages"))
 
       waits(1)
