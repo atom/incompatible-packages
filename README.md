@@ -1,3 +1,7 @@
+### This package is now a part of the [core Atom repository](https://github.com/atom/atom/tree/master/packages/incompatible-packages), please direct all issues and pull requests there in the future!
+
+---
+
 # Incompatible Packages package
 [![OS X Build Status](https://travis-ci.org/atom/incompatible-packages.svg?branch=master)](https://travis-ci.org/atom/incompatible-packages) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/neet595s038x7w70/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/incompatible-packages/branch/master) [![Dependency Status](https://david-dm.org/atom/incompatible-packages.svg)](https://david-dm.org/atom/incompatible-packages)
 
